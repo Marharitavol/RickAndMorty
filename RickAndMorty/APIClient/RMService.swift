@@ -36,8 +36,6 @@ final class RMService {
             // Decode response
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
-                print(json)
-                
                 let result = try JSONDecoder().decode(type.self, from: data)
                 completion(.success(result))
             } catch {
@@ -50,7 +48,6 @@ final class RMService {
     // MARK: - Private
     private func request(from rmRequest: RMRequest) -> URLRequest? {
         guard let url = rmRequest.url else { return nil }
-        print(url)
         var request = URLRequest(url: url)
         request.httpMethod = rmRequest.httpMethod
         
