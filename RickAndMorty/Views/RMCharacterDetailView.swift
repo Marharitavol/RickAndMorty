@@ -7,11 +7,15 @@
 
 import UIKit
 
+
+
 /// View for single character info
 class RMCharacterDetailView: UIView {
-
-    private var collectionView: UICollectionView?
     
+    public var collectionView: UICollectionView?
+    
+    private let viewModel: RMCharacterDetailViewViewModel
+        
     private let spinner: UIActivityIndicatorView = {
         let spinner = UIActivityIndicatorView(style: .large)
         spinner.hidesWhenStopped = true
@@ -21,10 +25,11 @@ class RMCharacterDetailView: UIView {
     
     // MARK: - Init
 
-    override init(frame: CGRect) {
+    init(frame: CGRect, viewModel: RMCharacterDetailViewViewModel) {
+        self.viewModel = viewModel
         super.init(frame: frame)
         translatesAutoresizingMaskIntoConstraints = false
-        backgroundColor = .systemPurple
+        backgroundColor = .systemBackground
         let collectionView = createCollectionView()
         self.collectionView = collectionView
         addSubviews(collectionView, spinner)
@@ -56,11 +61,20 @@ class RMCharacterDetailView: UIView {
         }
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }
     
     private func createSection(for sectionIndex: Int) -> NSCollectionLayoutSection {
         
+        let sectionTypes = viewModel.sections
+        switch sectionTypes[sectionIndex] {
+        case .photo:
+            return viewModel.createPhotoSectionLayout()
+        case .information:
+            return viewModel.createInfoSectionLayout()
+        case .episodes:
+            return viewModel.createEpisodeSectionLayout()
+        }
     }
-    
 }
