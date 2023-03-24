@@ -10,18 +10,29 @@ import UIKit
 final class RMCharacterDetailViewViewModel {
     private let character: RMCharacter
     
-    enum SectionType: CaseIterable {
-        case photo
-        case information
-        case episodes
+    enum SectionType {
+        case photo(viewModels: RMCharacterPhotoCollectionViewCellViewModel)
+        
+        case information(viewModels: [RMCharacterInfoCollectionViewCellViewModel])
+        
+        case episodes(viewModels: [RMCharacterEpisodeCollectionViewCellViewModel])
     }
     
-    public let sections = SectionType.allCases
+    public var sections: [SectionType] = []
     
     // MARK: - Init
     
     init(character: RMCharacter) {
         self.character = character
+        setUpSections()
+    }
+    
+    private func setUpSections() {
+        sections = [
+            .photo(viewModels: .init()),
+            .information(viewModels: [.init(), .init()]),
+            .episodes(viewModels: [.init(), .init()])
+        ]
     }
     
     private var requestUrl: URL? {
@@ -86,6 +97,4 @@ final class RMCharacterDetailViewViewModel {
         section.orthogonalScrollingBehavior = .groupPaging
         return section
     }
-    
-    
 }
