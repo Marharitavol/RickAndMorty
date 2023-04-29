@@ -41,7 +41,6 @@ final class RMEpisodeListView: UIView {
             forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter,
             withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
         return collectionView
-
     }()
     
     
@@ -59,7 +58,6 @@ final class RMEpisodeListView: UIView {
         
         viewModel.fetchEpisodes()
         setUpCollectionView()
-        
     }
     
     required init?(coder: NSCoder) {
