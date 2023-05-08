@@ -20,7 +20,14 @@ final class RMEpisodeDetailViewViewModel {
         }
     }
     
+    enum Sectiontype {
+        case information(viewModel: [RMEpisodeInfoCollectionViewCellViewModel])
+        case characters(viewModel: [RMCharacterCollectionViewCellViewModel])
+    }
+    
     public weak var delegate: RMEpisodeDetailViewViewModelDelegate?
+    
+    public private(set) var sections: [Sectiontype] = []
     
     init(endpointUrl: URL?) {
         self.endpointUrl = endpointUrl

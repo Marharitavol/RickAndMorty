@@ -47,7 +47,6 @@ class RMEpisodeListViewViewModel: NSObject {
     }
     
     private var cellViewModels: [RMCharacterEpisodeCollectionViewCellViewModel] = []
-    
     private var apiInfo: RMGetAllEpisodesResponse.Info? = nil
     
     /// Fetch initial set of Episodes(20)
