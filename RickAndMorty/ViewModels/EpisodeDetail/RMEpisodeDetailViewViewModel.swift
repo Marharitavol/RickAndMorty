@@ -14,8 +14,9 @@ protocol RMEpisodeDetailViewViewModelDelegate: AnyObject {
 final class RMEpisodeDetailViewViewModel {
     private let endpointUrl: URL?
     
-    private var dataTuple: (RMEpisode, [RMCharacter])? {
+    private var dataTuple: (episode: RMEpisode, characters: [RMCharacter])? {
         didSet {
+            createCellViewModel()
             delegate?.didFetchEpisodeDetails()
         }
     }
@@ -27,12 +28,39 @@ final class RMEpisodeDetailViewViewModel {
     
     public weak var delegate: RMEpisodeDetailViewViewModelDelegate?
     
-    public private(set) var sections: [Sectiontype] = []
+    public private(set) var cellViewModels: [Sectiontype] = []
     
     init(endpointUrl: URL?) {
         self.endpointUrl = endpointUrl
         fetchEpisodeData()
     }
+    
+    // MARK: - Public
+    
+    
+    // MARK: - Private
+
+    func createCellViewModel() {
+        guard let dataTuple = dataTuple else { return }
+        
+        let episode = dataTuple.episode
+        let characters = dataTuple.characters
+        cellViewModels = [
+            .information(viewModel: [
+                .init(title: "Ep name", value: episode.name),
+                .init(title: "Air Date", value: episode.air_date),
+                .init(title: "Episode", value: episode.episode),
+                .init(title: "created", value: episode.created),
+            ]),
+            .characters(viewModel: characters.compactMap({ character in
+                return RMCharacterCollectionViewCellViewModel(
+                    characterName: character.name,
+                    characterStatus: character.status,
+                    characterImageUrl: URL(string: character.image))
+            }))
+        ]
+    }
+
     
     public func fetchEpisodeData() {
         guard let url = endpointUrl,
@@ -84,8 +112,8 @@ final class RMEpisodeDetailViewViewModel {
         
         group.notify(queue: .main) {
             self.dataTuple = (
-                episode,
-                characters
+                episode: episode,
+                characters: characters
             )
         }
     }
