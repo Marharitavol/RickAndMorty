@@ -41,9 +41,9 @@ final class RMLocationViewController: UIViewController, RMLocationViewViewModelD
     }
     
     @objc private func didTapSearch() {
-//        let vc = RMSearchViewController(config: RMSearchViewController.Config(type: .character))
-//        vc.navigationItem.largeTitleDisplayMode = .never
-//        navigationController?.pushViewController(vc, animated: true)
+        let vc = RMSearchViewController(config: .init(type: .location))
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     // MARK: - RMLocationViewDelegate
