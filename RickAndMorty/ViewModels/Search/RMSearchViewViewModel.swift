@@ -31,11 +31,12 @@ final class RMSearchViewViewModel {
     }
     
     public func executeSearch() {
+
+        print(searchText)
         
-        searchText = "Rick"
         
         var queryParams: [URLQueryItem] = [
-        URLQueryItem(name: "name", value: searchText)
+            URLQueryItem(name: "name", value: searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
         ]
 //        switch config.type.endpoint {
 //        case .character, .episode:
