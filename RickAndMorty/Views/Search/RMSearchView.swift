@@ -39,6 +39,10 @@ final class RMSearchView: UIView {
         viewModel.registerOptionChangeBlock { tuple in
             self.searchInputView.update(option: tuple.0, value: tuple.1)
         }
+        
+        viewModel.registerSearchResultHandler { results in
+            print(results)
+        }
     }
     
     
@@ -90,7 +94,7 @@ extension RMSearchView: RMSearchInputViewDelegate {
     }
     
     func rmSearchInputView(_ inputView: RMSearchInputView, didChangeSearchText text: String?) {
-        viewModel.set(query: text)
+        viewModel.set(query: text ?? "")
     }
     
     func rmSearchInputViewDidTapSearchKeyboardButton(_ inputView: RMSearchInputView) {
