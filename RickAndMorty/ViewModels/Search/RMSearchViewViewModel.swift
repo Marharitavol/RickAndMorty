@@ -12,13 +12,15 @@ final class RMSearchViewViewModel {
     let config: RMSearchViewController.Config
     private var optionMap: [RMSearchInputViewViewModel.DynamicOption: String] = [:]
     private var searchText = ""
-        
+    
     private var optionMapUpdateBlock: (((RMSearchInputViewViewModel.DynamicOption, String)) -> Void)?
     
     private var searchResultHandler: ((RMSearchResultViewModel) -> Void)?
     
     private var noResultsHandler: (() -> Void)?
-
+    
+    private var searchResultModel: Codable?
+    
     
     // MARK: - Init
     
@@ -38,24 +40,24 @@ final class RMSearchViewViewModel {
     }
     
     public func executeSearch() {
-
+        
         print(searchText)
         
         
         var queryParams: [URLQueryItem] = [
             URLQueryItem(name: "name", value: searchText.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed))
         ]
-//        switch config.type.endpoint {
-//        case .character, .episode:
-//            searchText = "Rick"
-//            queryParams.append(URLQueryItem(name: "name", value: searchText))
-////            queryParams(RMGetAllCharactersResponse.self, request: request)
-////        case .episode:
-////            queryParams(RMGetAllEpisodesResponse.self, request: request)
-//        case .location:
-//            queryParams.append(URLQueryItem(name: "location", value: searchText))
-////            queryParams(RMGetAllLocationsResponse.self, request: request)
-//        }
+        //        switch config.type.endpoint {
+        //        case .character, .episode:
+        //            searchText = "Rick"
+        //            queryParams.append(URLQueryItem(name: "name", value: searchText))
+        ////            queryParams(RMGetAllCharactersResponse.self, request: request)
+        ////        case .episode:
+        ////            queryParams(RMGetAllEpisodesResponse.self, request: request)
+        //        case .location:
+        //            queryParams.append(URLQueryItem(name: "location", value: searchText))
+        ////            queryParams(RMGetAllLocationsResponse.self, request: request)
+        //        }
         
         queryParams.append(contentsOf: optionMap.enumerated().compactMap({ _, element in
             let key: RMSearchInputViewViewModel.DynamicOption = element.key
@@ -115,27 +117,35 @@ final class RMSearchViewViewModel {
         }
         
         if let results = resultsVM {
+            self.searchResultModel = model
             self.searchResultHandler?(results)
         } else {
             handleNoResults()
         }
     }
-        
+    
     private func handleNoResults() {
         noResultsHandler?()
     }
     
-        public func set(query text: String) {
-            self.searchText = text
-        }
-        
-        public func set(value: String, for option: RMSearchInputViewViewModel.DynamicOption) {
-            optionMap[option] = value
-            let tuple = (option, value)
-            optionMapUpdateBlock?(tuple)
-        }
-        
-        public func registerOptionChangeBlock(_ block: @escaping ((RMSearchInputViewViewModel.DynamicOption, String)) -> Void ) {
-            self.optionMapUpdateBlock = block
-        }
+    public func set(query text: String) {
+        self.searchText = text
     }
+    
+    public func set(value: String, for option: RMSearchInputViewViewModel.DynamicOption) {
+        optionMap[option] = value
+        let tuple = (option, value)
+        optionMapUpdateBlock?(tuple)
+    }
+    
+    public func registerOptionChangeBlock(_ block: @escaping ((RMSearchInputViewViewModel.DynamicOption, String)) -> Void ) {
+        self.optionMapUpdateBlock = block
+    }
+    
+    public func locationSearchResult(at index: Int) -> RMLocation? {
+        guard let searchModel = searchResultModel as? RMGetAllLocationsResponse else {
+            return nil
+        }
+        return searchModel.results[index]
+    }
+}
