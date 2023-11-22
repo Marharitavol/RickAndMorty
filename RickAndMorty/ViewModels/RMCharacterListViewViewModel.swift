@@ -146,7 +146,6 @@ extension RMCharacterListViewViewModel:  UICollectionViewDataSource, UICollectio
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let bounds = UIScreen.main.bounds
-        
         let width = (bounds.width-30)/2
         return CGSize(
             width: width,
